@@ -6,7 +6,20 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { projectStatusEnum, userRoleEnum } from "../utils/constan.js";
+import { pgEnum } from "drizzle-orm/pg-core";
+
+// 1. ENUM STATUS (Lokasi/Proses Motor)
+export const projectStatusEnum = pgEnum("project_status", [
+  'QUEUE',      // Antrean
+  'STRIPPING',  // Bongkar
+  'ENGINE',     // Mesin
+  'PAINTING',   // Cat
+  'ASSEMBLY',   // Rakit
+  'DONE',       // Selesai
+  'CANCELED'    // Batal
+]);
+
+export const userRoleEnum = pgEnum("user_role", ["client", "admin"]);
 
 // 2. TABEL PENGGUNA
 export const users = pgTable("users", {
@@ -19,7 +32,7 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// 3. TABEL PROYEK (STATUS UTAMA)
+// 3. TABEL PROYEK (STATUS UTAMA)A
 export const motorProjects = pgTable("motor_projects", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
@@ -63,6 +76,45 @@ export const motorProjectsRelations = relations(motorProjects, ({ one, many }) =
   user: one(users, { fields: [motorProjects.userId], references: [users.id] }),
   logs: many(progressLogs),
 }));
+
+
+// 6. ARTICLES (BLOG / EDUKASI)
+export const articles = pgTable("articles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  thumbnail: text("thumbnail"),
+  authorId: uuid("author_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+
+
+// 7. DESIGN CATALOG (KATALOG CUSTOM)
+export const designCatalogs = pgTable("design_catalogs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  description: text("description"),
+  image: text("image").notNull(),
+  isAvailable: text("is_available").default("true"), 
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+
+
+// 8. TRACK RECORD (PORTFOLIO)
+export const trackRecords = pgTable("track_records", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  description: text("description"),
+
+  beforeImage: text("before_image"),
+  afterImage: text("after_image"),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
 export const progressLogsRelations = relations(progressLogs, ({ one }) => ({
   project: one(motorProjects, { fields: [progressLogs.projectId], references: [motorProjects.id] }),
