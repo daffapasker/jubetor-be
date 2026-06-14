@@ -53,7 +53,7 @@ export const authorization = async (req, res, next) => {
   }
 
   req.user = {
-    id: userData._id,
+    id: userData.id,
     role: userData.role,
   };
 
