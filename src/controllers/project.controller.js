@@ -131,3 +131,26 @@ export const deleteProject = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const getMyProjects = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const projects = await db.query.motorProjects.findMany({
+      where: eq(motorProjects.userId, userId),
+      orderBy: [desc(motorProjects.createdAt)],
+      with: {
+        logs: true,
+      },
+    });
+
+    res.json({
+      message: "My projects retrieved successfully",
+      data: projects,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
+};

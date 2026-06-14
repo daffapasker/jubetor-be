@@ -11,12 +11,11 @@ import { authorization, allowRoles } from "../middlewares/auth.middlewares.js";
 
 const router = express.Router();
 
-router.use(authorization); // semua endpoint butuh token
 
-router.post("/", allowRoles("admin"), upload.single("thumbnail"), createArticle);
+router.post("/",authorization, allowRoles("admin"), upload.single("thumbnail"), createArticle);
 router.get("/", getArticles);
 router.get("/:id", getArticleById);
-router.put("/:id", allowRoles("admin"), upload.single("thumbnail"), updateArticle);
-router.delete("/:id", allowRoles("admin"), deleteArticle);
+router.put("/:id",authorization, allowRoles("admin"), upload.single("thumbnail"), updateArticle);
+router.delete("/:id", authorization, allowRoles("admin"), deleteArticle);
 
 export default router;
