@@ -11,7 +11,7 @@ export const generateAuthTokens = (payload) => {
   }
 
   const tokenPayload = {
-    _id: payload._id,
+    id: payload._id,
     role: payload.role,
   };
 

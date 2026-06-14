@@ -2,7 +2,12 @@ import * as articleService from "../services/articles.service.js";
 
 export const createArticle = async (req, res, next) => {
   try {
-    const article = await articleService.createArticle(req.body, req.file);
+    const article = await articleService.createArticle(
+      req.body,
+      req.file,
+      req.user.id
+    );
+
     res.status(201).json(article);
   } catch (error) {
     next(error);

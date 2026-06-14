@@ -17,7 +17,7 @@ const signInService = async (payload) => {
 
   const { accessToken } = generateAuthTokens({ 
     _id: user.id, 
-    role: user.role   
+    role: user.role   // ⚠️ ini juga aku perbaiki
   });
 
   return { user, accessToken };

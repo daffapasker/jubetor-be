@@ -3,13 +3,15 @@ import { articles } from "../db/schema.js";
 import { eq } from "drizzle-orm";
 import { imagekit } from "../utils/imageKit.js";
 
-export const createArticle = async (data, file) => {
+export const createArticle = async (data, file, authorId) => {
   let thumbnailUrl = null;
+
   if (file) {
     const upload = await imagekit.upload({
       file: file.buffer.toString("base64"),
       fileName: `article-${Date.now()}`,
     });
+
     thumbnailUrl = upload.url;
   }
 
@@ -18,10 +20,11 @@ export const createArticle = async (data, file) => {
     .values({
       title: data.title,
       content: data.content,
-      authorId: data.authorId,
+      authorId,
       thumbnail: thumbnailUrl,
     })
     .returning();
+
   return newArticle;
 };
 
