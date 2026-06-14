@@ -11,12 +11,12 @@ import { authorization, allowRoles } from "../middlewares/auth.middlewares.js";
 
 const router = express.Router();
 
-router.use(authorization);
 
-router.post("/", allowRoles("admin"), upload.single("image"), createCatalog);
+
+router.post("/",authorization, allowRoles("admin"), upload.single("image"), createCatalog);
 router.get("/", getCatalogs);
 router.get("/:id", getCatalogById);
-router.put("/:id", allowRoles("admin"), upload.single("image"), updateCatalog);
-router.delete("/:id", allowRoles("admin"), deleteCatalog);
+router.put("/:id", authorization, allowRoles("admin"), upload.single("image"), updateCatalog);
+router.delete("/:id", authorization, allowRoles("admin"), deleteCatalog);
 
 export default router;
